@@ -1,6 +1,7 @@
 require(vcfR)
+require(xlsx)
 VCF2Cosmic = function (vcffilepath, cosmicfilepath, outputfilename, minqual = 10) {
-  cosmicfile = read.csv(cosmicfilepath)
+  cosmicfile = read.csv(cosmicfilepath, stringsAsFactors = FALSE)
   cosmicChr = cosmicfile$MUTATION_GENOME_POSITION
   cosmicChr = substr(cosmicChr, 0, regexpr(":", cosmicChr) - 1)
   cosmicPos = cosmicfile$MUTATION_GENOME_POSITION
@@ -11,11 +12,17 @@ VCF2Cosmic = function (vcffilepath, cosmicfilepath, outputfilename, minqual = 10
   if(any(sigGenes)) {
     sigGenesChr = substr(vcffile[sigGenes, "CHROM"], 4, 10)
     sigGenesPos = vcffile[sigGenes, "POS"]
-    COSMIC = paste(sigGenesChr, sigGenesPos) %in% paste(cosmicChr, cosmicPos)
-    output = cbind(vcffile[sigGenes,], COSMIC)
+    COSMIC = match(paste(sigGenesChr, sigGenesPos), paste(cosmicChr, cosmicPos), nomatch = 0)
+    COSMICGenes = character(length(which(sigGenes)))
+    COSMICMutations = data.frame(MUTATION_CDS = character(length(which(sigGenes))), MUTATION_AA = character(length(which(sigGenes))), MUTATION_DESCRIPTION = character(length(which(sigGenes))), MUTATION_ZYGOSITY = character(length(which(sigGenes))), stringsAsFactors = F)
+    for(j in which(COSMIC > 0)) {
+      COSMICGenes[j] = as.character(cosmicfile[COSMIC[j], "GENE_NAME"])
+      COSMICMutations[j,] = cosmicfile[COSMIC[j], c("MUTATION_CDS", "MUTATION_AA", "MUTATION_DESCRIPTION", "MUTATION_ZYGOSITY")]
+    }
+    output = cbind(COSMICGenes, vcffile[sigGenes,], COSMIC > 0, COSMICMutations)
     write.xlsx(output, paste0(outputfilename,".xlsx"))
-    if(any(COSMIC)) {
-      write.xlsx(output[COSMIC,], paste0(outputfilename,"_COSMIC.xlsx"))
+    if(any(COSMIC > 0)) {
+      write.xlsx(output[COSMIC > 0,], paste0(outputfilename,"_COSMIC.xlsx"))
     }
   }
 }
