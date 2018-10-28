@@ -9,7 +9,7 @@ Gene2Cosmic = function (genefilepath, cosmicfilepath, outputfilename, minqual = 
     genefile = read.xlsx(genefilepath, sheetIndex = i, startRow = 2, stringsAsFactors = FALSE)
     genequals = genefile$QUAL
     if(!is.numeric(genequals)) {
-      print(paste("Error in sheet", i, ", expected numbers in QUAL, output may be bugged"))
+      warning(paste("Warning in sheet", i, ", expected numbers in QUAL, output may be bugged"))
     }
     sigGenes = genequals > minqual
     if(any(sigGenes)) {
