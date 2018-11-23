@@ -5,7 +5,7 @@
 ### Description: 
 
 Creates files called (outputfilename)\_(i).xlsx at the working directory, i = the sheet in the original excel file.
-These files contain the significant genes (QUAL > minqual) with the COSMIC match (T/F) column appended.
+These files contain the significant mutations (QUAL > minqual) with the COSMIC match (T/F) column appended.
 A match is defined as the starting position of the mutations being the same.
 If there is any match, another file called (outputfilename)\_(i)\_COSMIC.xlsx will be created, containing only the COSMIC matches.
 
@@ -17,7 +17,7 @@ If there is any match, another file called (outputfilename)\_(i)\_COSMIC.xlsx wi
 
 **outputfilename**: the name of the output file excluding extensions
 
-**minqual**: mininum quality for a gene to be significant, default is 10
+**minqual**: mininum quality for a mutation to be significant, default is 10
 
 **sheets**: number of sheets in the excel file to analyze, default is 3
 
@@ -34,7 +34,7 @@ If there is any match, another file called (outputfilename)\_(i)\_COSMIC.xlsx wi
 ### Description: 
 
 Creates a file called (outputfilename).xlsx at the working directory.
-This file contains the significant genes (QUAL > minqual) with the COSMIC match (T/F) column appended.
+This file contains the significant mutations (QUAL > minqual) with the COSMIC match (T/F) column appended.
 A match is defined as the starting position of the mutations being the same.
 If there is any match, another file called (outputfilename)\_COSMIC.xlsx will be created, containing only the COSMIC matches.
 
@@ -46,7 +46,7 @@ If there is any match, another file called (outputfilename)\_COSMIC.xlsx will be
 
 **outputfilename**: the name of the output file excluding extensions
 
-**minqual**: minimum quality for a gene to be significant, default is 10
+**minqual**: minimum quality for a mutation to be significant, default is 10
 
 ### Example usage:
 
@@ -179,3 +179,30 @@ Plots a circos plot from a VCF file.
 `source("PlotCircos.R")`
 
 `CircosVCFR("D:\\Michael Yang\\Documents\\Bio project\\thing\\02.vcf", topcount = 0.1)`
+
+# VCF2GenePanel.R
+
+## VCF2GenePanel(vcffilepath, genepanelfilepath, outputfilename, minqual = 10)
+
+### Description:
+
+For each entry in a gene annotation panel, mutations in the VCF file that fall within the listed exons will have their positions appended to a copy of the gene annotation panel.
+Only mutations with QUAL > minqual will be considered.
+Files will be created in the working directory.
+If there are any matches between mutations and exons, a new file called (outputfilename)_matched.xlsx will be created, containing only gene entries that matched with at least one mutation.
+
+### Parameters:
+
+**vcffilepath**: the filepath of the .vcf file.
+
+**genepanelfilepath**: the filepath of the gene annotation panel.
+
+**outputfilename**: the name of the output file excluding extensions
+
+**minqual**: mininum quality for a mutation to be significant, default is 10
+
+## Example Usage:
+
+`source("VCF2GenePanel.R")`
+
+`VCF2GenePanel("D:\\Michael Yang\\Documents\\Bio project\\thing\\02.vcf", "D:\\Michael Yang\\Documents\\Bio project\\gene annotation_panel.xlsx", "genepanelmutations")`
