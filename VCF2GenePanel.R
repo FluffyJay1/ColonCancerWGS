@@ -27,8 +27,9 @@ VCF2GenePanel = function(vcffilepath, genepanelfilepath, outputfilename, minqual
     for(exon in 1:length(geneExonStarts[[i]])) {
       matches = character()
       if(nrow(relevant) != 0) {
-        for(k in 1:length(relevant)) {
-          if(as.numeric(as.character(relevant[k, "POS"])) >= as.numeric(geneExonStarts[[i]][exon]) && as.numeric(as.character(relevant[k, "POS"])) <= as.numeric(geneExonEnds[[i]][exon])) {
+        withinBounds = as.numeric(as.character(relevant[, "POS"])) >= as.numeric(geneExonStarts[[i]][exon]) & as.numeric(as.character(relevant[, "POS"])) <= as.numeric(geneExonEnds[[i]][exon])
+        for(k in 1:length(withinBounds)) {
+          if(withinBounds[k]) {
             matches = c(matches, as.character(relevant[k, "POS"]))
             matched[i] = T
           }
