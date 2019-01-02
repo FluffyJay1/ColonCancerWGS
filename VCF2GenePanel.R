@@ -3,10 +3,10 @@ require(xlsx)
 VCF2GenePanel = function(vcffilepath, genepanelfilepath, outputfilename, minqual = 10) {
   vcffile = as.data.frame(getFIX(read.vcfR(vcffilepath, verbose = F)))
   sigGenes = as.numeric(as.character(vcffile$QUAL)) > minqual
-  sigChrom = substr(as.character(vcffile[sigGenes,"CHROM"]), 4, 100)
+  sigChrom = substr(as.character(vcffile[,"CHROM"]), 4, 100)
   vcfChromMap = list()
   for(x in c(as.character(1:22), "X", "Y")) {
-    vcfChromMap[[x]] = vcffile[sigGenes && x == sigChrom,]
+    vcfChromMap[[x]] = vcffile[sigGenes & x == sigChrom,]
   }
   
   genepanel = read.xlsx(genepanelfilepath, sheetIndex = 1, stringsAsFactors = FALSE)
