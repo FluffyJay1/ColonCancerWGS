@@ -1,7 +1,15 @@
 require(vcfR)
 require(xlsx)
+require(openxlsx)
 VCF2Cosmic = function (vcffilepath, cosmicfilepath, outputfilename, minqual = 10) {
-  cosmicfile = read.csv(cosmicfilepath, stringsAsFactors = FALSE)
+  cosmicformat = substr(cosmicfilepath, regexpr("\\.[^\\.]*$", cosmicfilepath) + 1, 1000)
+  cosmicfile = data.frame()
+  if(cosmicformat == "csv") {
+    cosmicfile = read.csv(cosmicfilepath, stringsAsFactors = FALSE)
+  } else if(cosmicformat == "xlsx") {
+    cosmicfile = read.xlsx(cosmicfilepath, sheet = 1)
+    colnames(cosmicfile) = toupper(gsub("\\.", "_", colnames(cosmicfile)))
+  }
   cosmicChr = cosmicfile$MUTATION_GENOME_POSITION
   cosmicChr = substr(cosmicChr, 0, regexpr(":", cosmicChr) - 1)
   cosmicPos = cosmicfile$MUTATION_GENOME_POSITION
