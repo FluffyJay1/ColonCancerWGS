@@ -206,3 +206,24 @@ If there are any matches between mutations and exons, a new file called (outputf
 `source("VCF2GenePanel.R")`
 
 `VCF2GenePanel("D:\\Michael Yang\\Documents\\Bio project\\thing\\02.vcf", "D:\\Michael Yang\\Documents\\Bio project\\gene annotation_panel.xlsx", "genepanelmutations")`
+
+## TumorMutationBurden(vcffilepath, genepanelfilepath, minqual = 10)
+
+### Description:
+
+For an entire gene annotation panel, the coding regions are noted, then all the mutations from the VCF that fall within the coding regions are tallied. 
+The value returned from this function is the tumor mutation burden (TMB), which is the ratio of mutations per coding bp.
+
+### Parameters:
+
+**vcffilepath**: the filepath of the .vcf file.
+
+**genepanelfilepath**: the filepath of the gene annotation panel.
+
+**minqual**: mininum quality for a mutation to be significant, default is 10
+
+## Example Usage:
+
+`source("VCF2GenePanel.R")`
+
+`TumorMutationBurden("D:\\Michael Yang\\Documents\\Bio project\\thing\\02.vcf", "D:\\Michael Yang\\Documents\\Bio project\\gene annotation_panel.xlsx")`
